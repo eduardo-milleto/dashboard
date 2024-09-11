@@ -1,0 +1,1 @@
+import{s as r}from"./D9nfPMcJ.js";import{$ as t}from"./S2o9e9pD.js";var n={},p={name:"BaseStepperPanel",extends:r,props:{header:null},style:n,provide:function(){return{$parentInstance:this}}},a={name:"StepperPanel",extends:p};function s(e,o,d,i,l,$){return t(e.$slots,"default")}a.render=s;export{a as default};
