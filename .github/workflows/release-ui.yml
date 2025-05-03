@@ -1,0 +1,62 @@
+name: Release UI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Install dependencies
+        working-directory: ui
+        run: |
+          yarn install
+
+      - name: Build
+        working-directory: ui
+        run: |
+          yarn generate
+
+      - name: Upload folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: dashboard
+          path: ui/.output/public
+          retention-days: 1
+
+  deploy-github-pages:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Download folder
+        uses: actions/download-artifact@v4
+        with:
+          name: dashboard
+          path: public
+
+      - name: Build
+        working-directory: ui
+        run: |
+          touch public/.nojekyll
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.0.0
+        with:
+          token: ${{ secrets.GH_TOKEN_WAHA_DASHBOARD }}
+          repository-name: devlikeapro/waha-dashboard
+          branch: gh-pages
+          folder: public
+          clean: true
